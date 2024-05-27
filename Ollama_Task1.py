@@ -17,35 +17,9 @@ def OllamaModel():
     DATA_PATH = "CVs"  
 
     def load_documents():
+        document_loader = PyPDFDirectoryLoader(DATA_PATH)
+        return document_loader.load()
 
-        class Document:
-            def __init__(self, page_content, metadata):
-                self.page_content = page_content
-                self.metadata = metadata
-        def extract_text_from_pdf(pdf_path):
-            text = ""
-            with open(pdf_path, "rb") as file:
-                reader = PyPDF2.PdfReader(file)
-                num_pages = len(reader.pages)
-                for page_num in range(num_pages):
-                    page = reader.pages[page_num]
-                    text += page.extract_text()
-            return text
-
-        def process_pdfs_in_folder(folder_path):
-            documents = []  # List to store Document objects
-            for filename in os.listdir(folder_path):
-                if filename.endswith(".pdf"):
-                    pdf_path = os.path.join(folder_path, filename)
-                    data = extract_text_from_pdf(pdf_path)
-                    page_content = ' '.join(data.split()) 
-
-                    metadata = {"source": pdf_path}  # Metadata dictionary with PDF path
-                    documents.append(Document(page_content, metadata))
-            return documents
-    
-        return process_pdfs_in_folder(DATA_PATH)
-    
     data = load_documents()
     
     # Split and chunk 
